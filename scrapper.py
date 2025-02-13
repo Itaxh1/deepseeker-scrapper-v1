@@ -5,6 +5,7 @@ from langchain_core.vectorstores import InMemoryVectorStore
 from langchain_ollama import OllamaEmbeddings
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_ollama.llms import OllamaLLM
+import re
 
 STACKOVERFLOW_API = "https://api.stackexchange.com/2.3/search/advanced"
 QUORA_SEARCH_URL = "https://www.quora.com/search?q={query}"
@@ -23,9 +24,9 @@ You are an AI assistant helping users with coding questions. Below is the respon
 {quora_answers}
 """
 
-embeddings = OllamaEmbeddings(model="deepseek-r1:1.5b")
+embeddings = OllamaEmbeddings(model="deepseek-r1:7b")
 vector_store = InMemoryVectorStore(embeddings)
-model = OllamaLLM(model="deepseek-r1:1.5b")
+model = OllamaLLM(model="deepseek-r1:7b")
 
 def fetch_stackoverflow_answers(query):
     params = {
@@ -61,6 +62,10 @@ question = st.text_input("Enter your coding question:")
 if question:
     st.chat_message("user").write(question)
     deepseek_response = generate_deepseek_response(question)
+    # Remove <think> tags
+    deepseek_response = deepseek_response.strip()
+    deepseek_response = re.sub(r"<think>.*?</think>", "", deepseek_response, flags=re.DOTALL).strip()
+    deepseek_response if deepseek_response else "No valid response."
     stackoverflow_answers = fetch_stackoverflow_answers(question)
     quora_answers = fetch_quora_answers(question)
     final_response = template.format(deepseek_response=deepseek_response, stackoverflow_answers=stackoverflow_answers, quora_answers=quora_answers)
