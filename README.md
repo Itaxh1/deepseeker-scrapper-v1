@@ -1,78 +1,61 @@
+# **DeepSeeker AI v1**  
 
----
+## **Overview**  
 
-# DeepSeeker Scraper v1  
+**DeepSeeker AI v1** is an intelligent coding assistant that **fetches relevant answers** from **Stack Overflow** and **Medium**, while also generating AI-powered responses using **DeepSeek RAG**. This tool is designed to help developers quickly find high-quality coding solutions with minimal effort.  
 
-## Overview  
+## **Features**  
 
-**DeepSeeker Scraper v1** is a web scraping tool designed to extract coding-related Q&A data from platforms like **Quora and Stack Overflow**. This scraper utilizes **Selenium** for dynamic content extraction and **DeepSeek RAG** for AI-powered response generation, enabling efficient query resolution for developers.  
+### **1. AI-Powered Code Assistance**  
+- Uses **DeepSeek RAG** to generate intelligent coding responses.  
+- Enhances answer quality using **Retrieval-Augmented Generation (RAG)**.  
 
-## Features  
+### **2. Stack Overflow & Medium Search**  
+- Fetches **top-ranked** Stack Overflow answers for relevant queries.  
+- Provides a **direct Medium search link** for blog-based solutions.  
 
-- **Web Scraping with Selenium**  
-  - Extracts Q&A content from **Quora** dynamically.  
-  - Retrieves structured data from **Stack Overflow** for better query processing.  
+### **3. Optimized Query Processing**  
+- Generates a **refined search query** to improve answer accuracy.  
+- Implements **caching and query optimization** for faster responses.  
 
-- **AI-Powered Responses with DeepSeek RAG**  
-  - Generates intelligent responses based on extracted data.  
-  - Enhances answer quality using Retrieval-Augmented Generation (RAG).  
+## **Tech Stack**  
 
-- **Efficient Data Processing**  
-  - Stores extracted data in a structured format (JSON/Database).  
-  - Implements caching and optimization for faster queries.  
+- **Python** (for backend processing)  
+- **Streamlit** (for UI and interactive chat)  
+- **DeepSeek RAG** (for AI-generated answers)  
+- **Requests & BeautifulSoup** (for data fetching)  
 
-## Tech Stack  
+## **Installation**  
 
-- **Python** (for scripting and automation)  
-- **Selenium** (for web scraping)  
-- **DeepSeek RAG** (for AI-generated responses)  
-- **BeautifulSoup** (for HTML parsing)  
-- **SQLite/MySQL** (for structured data storage)  
-
-## Installation  
-
-1. Clone the repository:  
+1. **Clone the repository**:  
    ```bash
-   git clone https://github.com/yourusername/deepseeker-scrapper-v1.git
-   cd deepseeker-scrapper-v1
+   git clone https://github.com/yourusername/deepseeker-ai.git
+   cd deepseeker-ai
    ```  
-2. Install dependencies:  
+2. **Install dependencies**:  
    ```bash
    pip install -r requirements.txt
    ```  
-3. Set up Selenium WebDriver:  
-   - Download the appropriate **WebDriver** for your browser (Chrome/Firefox).  
-   - Place it in the project directory or add it to the system path.  
 
-## Usage  
+## **Usage**  
 
-1. Run the scraper for Quora:  
+1. **Run the application**:  
    ```bash
-   python quora_scraper.py
-   ```  
-2. Run the scraper for Stack Overflow:  
-   ```bash
-   python stackoverflow_scraper.py
-   ```  
-3. Process the extracted data using DeepSeek RAG:  
-   ```bash
-   python deepseek_processor.py
+   streamlit run app.py 
    ```  
 
-## Output  
+## **Output**  
 
-- Scraped data is stored in `data/` as JSON or in a configured database.  
-- AI-processed responses are saved in `processed_data/`.  
+- AI-generated responses are displayed in a **chat-like interface**.  
+- Stack Overflow answers are fetched and formatted dynamically.  
+- A Medium search link is provided for additional insights.  
 
-## Future Improvements  
+## **Future Improvements**  
 
-- Implement multi-threading for faster scraping.  
-- Add support for additional knowledge sources.  
-- Optimize AI-generated responses with fine-tuned models.  
+- Implement **multi-threading** for faster response fetching.  
+- Extend support for **additional programming forums**.  
+- Optimize AI-generated responses with **custom fine-tuning**.  
 
-## License  
+## **License**  
 
 This project is open-source under the **MIT License**.  
-
----
-
