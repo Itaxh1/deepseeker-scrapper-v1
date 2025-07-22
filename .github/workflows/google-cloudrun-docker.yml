@@ -9,7 +9,7 @@ env:
   PROJECT_ID: 'smooth-transit-456023-r4'
   REGION: 'us-central1'
   SERVICE: 'streamlit-repo'  # Artifact Registry repository name
-  WORKLOAD_IDENTITY_PROVIDER: 'projects/654928681850/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+  WORKLOAD_IDENTITY_PROVIDER: 'projects/654928681850/locations/global/workloadIdentityPools/github-pool/providers/github-provider-2'
 
 jobs:
   deploy:
