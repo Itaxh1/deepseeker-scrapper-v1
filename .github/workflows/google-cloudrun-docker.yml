@@ -20,13 +20,27 @@ jobs:
       id-token: write
 
     steps:
+      - id: generate_id_token
+        name: Generate ID token
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const token = await github.rest.actions.createOidcTokenForRepo({
+              owner: 'Itaxh1',
+              repo: 'deepseeker-scrapper-v1'
+            });
+            return token.data.value
+
+      - name: Show token
+        run: echo "${{ steps.generate_id_token.outputs.token }}"
+
       - name: Print GitHub OIDC token
         run: |
           echo "Requesting OIDC token"
           id_token=$(curl -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" https://token.actions.githubusercontent.com)
           echo "$id_token"
         env:
-          ACTIONS_ID_TOKEN_REQUEST_TOKEN: ${{ steps.auth.outputs.token }}
+          ACTIONS_ID_TOKEN_REQUEST_TOKEN: ${{ steps.generate_id_token.outputs.token }}
 
       - name: Checkout code
         uses: actions/checkout@v4
