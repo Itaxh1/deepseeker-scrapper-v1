@@ -20,7 +20,7 @@ jobs:
       id-token: write
 
     steps:
-       - name: Print GitHub OIDC token
+      - name: Print GitHub OIDC token
         run: |
           echo "Requesting OIDC token"
           id_token=$(curl -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" https://token.actions.githubusercontent.com)
@@ -61,5 +61,3 @@ jobs:
 
       - name: Show deployed URL
         run: echo "Deployed at ${{ steps.deploy.outputs.url }}"
-
-   
