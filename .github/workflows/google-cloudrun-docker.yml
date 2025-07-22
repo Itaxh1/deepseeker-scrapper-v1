@@ -1,4 +1,4 @@
-name: 'Build and Deploy to Cloud Run'
+name: Build and Deploy to Cloud Run
 
 on:
   push:
@@ -8,48 +8,48 @@ on:
 env:
   PROJECT_ID: 'smooth-transit-456023-r4'
   REGION: 'us-central1'
-  SERVICE: 'streamlit-repo'  # Use your Artifact Registry repo name
+  SERVICE: 'streamlit-repo'  # Artifact Registry repository name
   WORKLOAD_IDENTITY_PROVIDER: 'projects/654928681850/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
 
 jobs:
   deploy:
-    runs-on: 'ubuntu-latest'
+    runs-on: ubuntu-latest
 
     permissions:
-      contents: 'read'
-      id-token: 'write'
+      contents: read
+      id-token: write
 
     steps:
-      - name: 'Checkout'
-        uses: 'actions/checkout@v4'
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - id: 'auth'
-        name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v2'
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: '${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
-          service_account: 'streamlit-deployer@${{ env.PROJECT_ID }}.iam.gserviceaccount.com'
+          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: streamlit-deployer@${{ env.PROJECT_ID }}.iam.gserviceaccount.com
 
-      - name: 'Docker Auth'
-        uses: 'docker/login-action@v3'
+      - name: Docker login to Artifact Registry
+        uses: docker/login-action@v3
         with:
-          username: 'oauth2accesstoken'
-          password: '${{ steps.auth.outputs.access_token }}'
-          registry: '${{ env.REGION }}-docker.pkg.dev'
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
+          registry: ${{ env.REGION }}-docker.pkg.dev
 
-      - name: 'Build and Push Container'
-        run: |-
+      - name: Build and push Docker image
+        run: |
           IMAGE_URI="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/streamlit-app:${{ github.sha }}"
           docker build -t "$IMAGE_URI" .
           docker push "$IMAGE_URI"
 
-      - id: 'deploy'
-        name: 'Deploy to Cloud Run'
-        uses: 'google-github-actions/deploy-cloudrun@v2'
+      - id: deploy
+        name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: 'streamlit-app'
-          region: '${{ env.REGION }}'
-          image: '${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/streamlit-app:${{ github.sha }}'
+          service: streamlit-app
+          region: ${{ env.REGION }}
+          image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/streamlit-app:${{ github.sha }}
 
-      - name: 'Show URL'
+      - name: Show deployed URL
         run: echo "Deployed at ${{ steps.deploy.outputs.url }}"
