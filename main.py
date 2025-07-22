@@ -5,6 +5,12 @@ import urllib.parse
 import concurrent.futures
 import time
 from openai import OpenAI
+import logging
+from dotenv import load_dotenv
+load_dotenv()
+
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+st.write("API key loaded:", OPENROUTER_API_KEY is not None)
 
 def get_secret(key, default=""):
     """Get secret from environment variable or fallback to st.secrets."""
