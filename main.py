@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import requests
 import urllib.parse
@@ -5,10 +6,14 @@ import concurrent.futures
 import time
 from openai import OpenAI
 
-# Initialize OpenAI client with OpenRouter
+def get_secret(key, default=""):
+    """Get secret from environment variable or fallback to st.secrets."""
+    return os.getenv(key) or st.secrets.get(key, default)
+
+# Initialize OpenAI client with OpenRouter using env-aware API key
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key=st.secrets.get("OPENROUTER_API_KEY", ""),  # Fallback to empty string if not found
+    api_key=get_secret("OPENROUTER_API_KEY"),
 )
 
 # Constants with optimized parameters
@@ -30,14 +35,17 @@ You are an AI assistant helping users with coding questions. Below is the respon
 {medium_answers}
 """
 
+# Prepare headers with env-aware site info
+extra_headers = {
+    "HTTP-Referer": get_secret("SITE_URL", "https://localhost"),
+    "X-Title": get_secret("SITE_NAME", "DeepSeek Coding Assistant"),
+}
+
 def refine_search_query(question):
     """Uses DeepSeek to generate a concise search query (max 300 chars) for Stack Overflow and Medium."""
     try:
         completion = client.chat.completions.create(
-            extra_headers={
-                "HTTP-Referer": st.secrets.get("SITE_URL", "https://localhost"), 
-                "X-Title": st.secrets.get("SITE_NAME", "DeepSeek Coding Assistant"),
-            },
+            extra_headers=extra_headers,
             model="deepseek/deepseek-r1-0528:free",
             messages=[
                 {
@@ -117,10 +125,7 @@ def fetch_medium_answers(query):
 def generate_deepseek_response(question):
     try:
         completion = client.chat.completions.create(
-            extra_headers={
-                "HTTP-Referer": st.secrets.get("SITE_URL", "https://localhost"),
-                "X-Title": st.secrets.get("SITE_NAME", "DeepSeek Coding Assistant"),
-            },
+            extra_headers=extra_headers,
             model="deepseek/deepseek-r1-0528:free",
             messages=[
                 {
